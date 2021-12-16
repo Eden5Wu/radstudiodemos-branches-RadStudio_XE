@@ -20,16 +20,24 @@ uses
 
 type
 
+{ TInternalSQLDataSet }
+
+  TInternalDataSetProvider = class(TDataSetProvider)
+  published
+    property DataSet;
+    property Options;
+  end;
+
 { TSimpleDataSetEx }
   /// <summary>
-  /// 僅增加 DataSetProvider 屬性，其它和 TSimepleDataSet 完全相同
+  /// 僅增加 DataSetProvider 屬性，其它和 TSimpleDataSet 完全相同
   /// </summary>
   TSimpleDataSetEx = class(TCustomClientDataSet)
   private
     FConnection: TSQLConnection;
     FInternalConnection: TSQLConnection; { Always points to internal if present }
     FDataSet: TInternalSQLDataSet;
-    FProvider: TDataSetProvider;
+    FProvider: TInternalDataSetProvider;
   protected
     procedure AllocConnection; virtual;
     procedure AllocDataSet; virtual;
@@ -51,7 +59,7 @@ type
     property AutoCalcFields;
     property Connection: TSQLConnection read FConnection write SetConnection;
     property DataSet: TInternalSQLDataSet read FDataSet;
-    property Provider: TDataSetProvider read FProvider;
+    property Provider: TInternalDataSetProvider read FProvider;
     property Constraints;
     property DisableStringTrim;
     property FileName;
@@ -167,7 +175,7 @@ end;
 
 procedure TSimpleDataSetEx.AllocProvider;
 begin
-  FProvider := TDataSetProvider.Create(Self);
+  FProvider := TInternalDataSetProvider.Create(Self);
   FProvider.DataSet := FDataSet;
   FProvider.Name := 'InternalProvider';                 { Do not localize }
   FProvider.SetSubComponent(True);
