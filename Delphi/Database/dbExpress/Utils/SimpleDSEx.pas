@@ -26,6 +26,7 @@ type
   published
     property DataSet;
     property Options;
+    property UpdateMode;
   end;
 
 { TSimpleDataSetEx }
